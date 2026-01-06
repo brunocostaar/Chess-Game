@@ -1,0 +1,11 @@
+Main.class
+pecas/Rainha.class
+pecas/Torre.class
+pecas/Peca.class
+pecas/Rei.class
+gui/ChessGUI.class
+Tabuleiro/Casa.class
+pecas/Cavalo.class
+Tabuleiro/Tabuleiro.class
+pecas/Bispo.class
+pecas/Peao.class

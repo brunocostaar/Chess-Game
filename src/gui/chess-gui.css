@@ -1,0 +1,100 @@
+/*
+ * chess-gui.css
+ * -------------
+ * This stylesheet defines the visual appearance of the Chess GUI.
+ * It uses JavaFX CSS syntax (similar to standard web CSS but with -fx- prefixes).
+ */
+
+/* The root container for the entire scene */
+.root {
+    /* Creates a dark gradient background for a modern look */
+    -fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);
+    /* Sets the default font for the application */
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Default style for all Label controls */
+.label {
+    -fx-text-fill: #f8fafc; /* Light text color for readability on dark background */
+}
+
+/* Specific style for the main title label */
+.header-label {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    /* Adds a subtle shadow to make the text pop */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 5);
+}
+
+/* Style for secondary headers (if used) */
+.sub-header-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #94a3b8; /* Slightly dimmer text */
+}
+
+/* The container for the 8x8 grid of squares */
+.chess-board {
+    -fx-background-color: #334155; /* Border color around the board */
+    /* Deep shadow behind the board to give it a "floating" effect */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 20, 0, 0, 10);
+    -fx-background-radius: 5px;
+    -fx-padding: 5px; /* Spacing between the outer border and the squares */
+}
+
+/* Style for the light-colored squares on the board */
+.light-square {
+    -fx-background-color: #e2e8f0; /* Off-white / light gray */
+}
+
+/* Style for the dark-colored squares on the board */
+.dark-square {
+    -fx-background-color: #475569; /* Slate gray */
+}
+
+/* Style applied to a square when it is selected by the user */
+.selected {
+    -fx-background-color: #fbbf24; /* Amber/Gold highlight color */
+}
+
+/* General style for the text characters representing pieces (e.g., ♜, ♞) */
+.piece {
+    -fx-font-size: 50px; /* Large font size for visibility */
+    /* Subtle shadow to give pieces some depth */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 2, 0, 1, 1);
+    -fx-cursor: hand; /* Changes cursor to pointer on hover */
+}
+
+/* Specific style for White pieces */
+.white-piece {
+    -fx-text-fill: #ffffff;
+    /* Stronger shadow for white pieces to ensure contrast against light squares */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 2, 0, 0, 1);
+}
+
+/* Specific style for Black pieces */
+.black-piece {
+    -fx-text-fill: #000000;
+}
+
+/* Style for buttons (New Game, etc.) */
+.button {
+    -fx-background-color: #38bdf8; /* Light blue */
+    -fx-text-fill: #0f172a; /* Dark text */
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px; /* Rounded corners */
+    -fx-cursor: hand;
+}
+
+/* Hover state for buttons */
+.button:hover {
+    -fx-background-color: #7dd3fc; /* Lighter blue on hover */
+}
+
+/* Style for the "White's Turn" / "Black's Turn" indicator */
+.turn-indicator {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    -fx-padding: 10px;
+    -fx-background-radius: 8px;
+}
