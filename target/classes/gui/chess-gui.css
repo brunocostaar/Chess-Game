@@ -56,6 +56,12 @@
     -fx-background-color: #fbbf24; /* Amber/Gold highlight color */
 }
 
+/* Style for the legal move indicators (dots) */
+.legal-move-indicator {
+    -fx-fill: #b45309; /* Dark yellow/orange (Amber-700) */
+    -fx-opacity: 0.6;
+}
+
 /* General style for the text characters representing pieces (e.g., ♜, ♞) */
 .piece {
     -fx-font-size: 50px; /* Large font size for visibility */

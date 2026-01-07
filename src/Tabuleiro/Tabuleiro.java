@@ -397,6 +397,7 @@ public class Tabuleiro {
     }
 
     public static void limpar() {
+        pecasNoTabuleiro.clear(); // Limpa a lista de peças para evitar fantasmas
         for (int idColuna = 0; idColuna < COLUNAS; idColuna++) {
             for (int idFileira = 0; idFileira < FILEIRAS; idFileira++) {
                 getCasa(idColuna, idFileira).esvaziar();

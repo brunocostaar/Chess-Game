@@ -15,8 +15,8 @@ public class Main {
 
         criarCasas();
         preencherCasasToString();
-        // lerFEN(FEN_POS_INICIAL); // en passant tb mostrar
-        lerFEN("r3k1nr/1p1ppppp/8/8/8/2Q5/PPPPPPPP/RN2K2R"); // exemplo roque
+        lerFEN(FEN_POS_INICIAL); // en passant tb mostrar
+        // lerFEN("r3k1nr/1p1ppppp/8/8/8/2Q5/PPPPPPPP/RN2K2R"); // exemplo roque
         // lerFEN("r7/6k1/5q2/8/1p4N1/1P6/1KP5/7r"); //Caso de cheque
         // lerFEN("4k3/3r4/6n1/7B/Q7/4q3/8/1KR4R"); // peças cravadas
         // lerFEN("3k4/3r1P2/6n1/7B/Q7/4q3/8/1KR2R2"); // promoção e xeque mate

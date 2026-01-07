@@ -9,11 +9,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import Tabuleiro.Tabuleiro;
 import Tabuleiro.Casa;
 import pecas.*;
+
+import java.util.ArrayList;
 
 /**
  * ChessGUI.java
@@ -45,6 +48,7 @@ public class ChessGUI extends Application {
     // Toggle for auto-rotating the board based on turn
     private boolean autoFlip = false;
     private boolean showConfig = false; // Toggle for showing/hiding config panel
+    private boolean gameEnded = false; // Flag to stop interaction when game ends
 
     /**
      * The main entry point for the JavaFX application.
@@ -188,6 +192,16 @@ public class ChessGUI extends Application {
         // This happens if autoFlip is ON and it is currently Black's turn (odd number of moves).
         boolean isFlipped = autoFlip && (Tabuleiro.getJogadas() % 2 != 0);
 
+        // Prepare list of legal moves for the selected piece (if any)
+        ArrayList<Casa> legalMoves = new ArrayList<>();
+        if (selectedLogicCol != null && selectedLogicRow != null) {
+            Casa selectedCasa = Tabuleiro.getCasa(selectedLogicCol, selectedLogicRow);
+            Peca selectedPiece = selectedCasa.getPeca();
+            if (selectedPiece != null) {
+                legalMoves = selectedPiece.getCasasLegais();
+            }
+        }
+
         // Loop through visual rows and columns (0,0 is top-left of the screen)
         for (int row = 0; row < BOARD_SIZE; row++) {
             for (int col = 0; col < BOARD_SIZE; col++) {
@@ -231,9 +245,17 @@ public class ChessGUI extends Application {
                     tile.getStyleClass().add("selected");
                 }
 
+                // --- Legal Move Indicator ---
+                // Check if this square is a legal move for the selected piece
+                Casa currentCasa = Tabuleiro.getCasa(logicColuna, logicFileira);
+                if (legalMoves.contains(currentCasa)) {
+                    Circle indicator = new Circle(TILE_SIZE / 6.0);
+                    indicator.getStyleClass().add("legal-move-indicator");
+                    tile.getChildren().add(indicator);
+                }
+
                 // --- Render Piece ---
-                Casa casa = Tabuleiro.getCasa(logicColuna, logicFileira);
-                Peca peca = casa.getPeca();
+                Peca peca = currentCasa.getPeca();
 
                 if (peca != null) {
                     Label pieceLabel = new Label(getPieceSymbol(peca));
@@ -264,6 +286,8 @@ public class ChessGUI extends Application {
      * @param logicRow The logical row (0-7) of the clicked square.
      */
     private void handleTileClick(int logicCol, int logicRow) {
+        if (gameEnded) return; // Prevent moves if game is over
+
         // Case 1: No piece is currently selected
         if (selectedLogicCol == null) {
             Casa casa = Tabuleiro.getCasa(logicCol, logicRow);
@@ -298,6 +322,9 @@ public class ChessGUI extends Application {
             // This recalculates legal moves, checks for check/checkmate, etc.
             refreshGameState();
 
+            // Check for Checkmate or Stalemate
+            checkGameOver();
+
             // Deselect and re-render the board to show the new state.
             selectedLogicCol = null;
             selectedLogicRow = null;
@@ -324,10 +351,32 @@ public class ChessGUI extends Application {
         Tabuleiro.uniteCasasLegais();       // Aggregate all legal moves for white/black
     }
 
+    private void checkGameOver() {
+        if (Tabuleiro.getReiBranco().isCheckmated()) {
+            gameEnded = true;
+            showAlert("Game Over", "Black wins by Checkmate!");
+        } else if (Tabuleiro.getReiPreto().isCheckmated()) {
+            gameEnded = true;
+            showAlert("Game Over", "White wins by Checkmate!");
+        } else if (Tabuleiro.getReiBranco().isStalemate() || Tabuleiro.getReiPreto().isStalemate()) {
+            gameEnded = true;
+            showAlert("Game Over", "Draw by Stalemate!");
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     /**
      * Resets the game to the starting position.
      */
     private void resetGame() {
+        gameEnded = false; // Reset game over flag
         Tabuleiro.limpar(); // Clear the board array
         Tabuleiro.setJogadas(0); // Reset the move counter to 0 (White's turn)
         Tabuleiro.lerFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"); // Reload start FEN
@@ -353,7 +402,9 @@ public class ChessGUI extends Application {
         // Use the new overloaded lerFEN method that accepts the turn color
         Tabuleiro.lerFEN(fen, turnColor);
         
+        gameEnded = false; // Reset game over flag
         refreshGameState();
+        checkGameOver(); // Check if the loaded position is already checkmate/stalemate
 
         selectedLogicCol = null;
         selectedLogicRow = null;
@@ -364,6 +415,10 @@ public class ChessGUI extends Application {
      * Updates the text label indicating whose turn it is.
      */
     private void updateTurnLabel() {
+        if (gameEnded) {
+            turnLabel.setText("Game Over");
+            return;
+        }
         boolean whiteTurn = Tabuleiro.getJogadas() % 2 == 0;
         turnLabel.setText(whiteTurn ? "White's Turn" : "Black's Turn");
     }
