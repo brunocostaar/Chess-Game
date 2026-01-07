@@ -17,30 +17,21 @@ public class Main {
         preencherCasasToString();
         lerFEN(FEN_POS_INICIAL); // en passant tb mostrar
         // lerFEN("r3k1nr/1p1ppppp/8/8/8/2Q5/PPPPPPPP/RN2K2R"); // exemplo roque
-        // lerFEN("r7/6k1/5q2/8/1p4N1/1P6/1KP5/7r"); //Caso de cheque
+        // lerFEN("r7/6k1/5q2/8/1p4N1/1P6/1KP5/7r"); //Caso de xeque
         // lerFEN("4k3/3r4/6n1/7B/Q7/4q3/8/1KR4R"); // peças cravadas
         // lerFEN("3k4/3r1P2/6n1/7B/Q7/4q3/8/1KR2R2"); // promoção e xeque mate
         // lerFEN("7k/8/p3Q3/Pp5p/1P5P/8/1K6/8"); //Caso afogamento
-        // lerFEN("6n1/Rn3k2/2r4b/5N2/5Q2/8/1K6/8"); //Caso de cheque duplo
+        // lerFEN("6n1/Rn3k2/2r4b/5N2/5Q2/8/1K6/8"); //Caso de xeque duplo
+
+        // Initial state calculation is needed before the first move
+        refreshGameState();
 
         imprimirBranco();
 
         System.out.println("Digite 'ajuda' para saber mais sobre os comandos.");
 
         inicio: while (true) {
-            int turno = getJogadas();
-
-            clearCasasLegais(); // Esvazia as casas legais antes de analisar novamente.
-            clearCasasDeBloqueio(); // Esvazia as casas de bloqueio antes de analisar novamente.
-            clearPecasAtacantes(); // Zera a contagem das peças que estão atacando o rei.
-            clearIsAtacked();
-
-            refreshCasasLegais(); // Analisa as casas legais de todas as peças do tabuleiro.
-            refreshIsInCheck(); // Verifica se os reis estão em cheque.
-            refreshFiltroCasasLegais(); // Filtra a interseção entre casas legais e as casas de bloqueio.
-            refreshCravaPecas();
-            uniteCasasLegais();
-
+            // Check for Game Over conditions at the start of the turn
             // Xequemate
             if (getReiBranco().isCheckmated()) {
                 System.out.println("As pretas venceram por chequemate!");
@@ -218,10 +209,27 @@ public class Main {
                 }
 
                 Tabuleiro.moverPeca(colOrigem, filOrigem, colDestino, filDestino);
+                
+                // Refresh game state AFTER the move
+                refreshGameState();
+                
             } else {
                 System.out.println("Não existe nenhuma peça nesta casa!");
                 imprimirCorAtual();
             }
         }
+    }
+
+    private static void refreshGameState() {
+        clearCasasLegais(); // Esvazia as casas legais antes de analisar novamente.
+        clearCasasDeBloqueio(); // Esvazia as casas de bloqueio antes de analisar novamente.
+        clearPecasAtacantes(); // Zera a contagem das peças que estão atacando o rei.
+        clearIsAtacked();
+
+        refreshCasasLegais(); // Analisa as casas legais de todas as peças do tabuleiro.
+        refreshIsInCheck(); // Verifica se os reis estão em cheque.
+        refreshFiltroCasasLegais(); // Filtra a interseção entre casas legais e as casas de bloqueio.
+        refreshCravaPecas();
+        uniteCasasLegais();
     }
 }

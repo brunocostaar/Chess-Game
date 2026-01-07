@@ -17,6 +17,7 @@ import Tabuleiro.Casa;
 import pecas.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * ChessGUI.java
@@ -314,9 +315,30 @@ public class ChessGUI extends Application {
             }
 
             // Attempt to move the selected piece to the clicked square.
-            // We use 'q' (Queen) as the default promotion piece for simplicity in this GUI.
+            
+            // Check for promotion BEFORE moving
+            char promotionChar = 'q'; // Default
+            Casa sourceCasa = Tabuleiro.getCasa(selectedLogicCol, selectedLogicRow);
+            Peca piece = sourceCasa.getPeca();
+            
+            if (piece instanceof Peao) {
+                int promotionRow = (piece.getCor() == Tabuleiro.BRANCO) ? Tabuleiro.OITAVA_FILEIRA : Tabuleiro.PRIMEIRA_FILEIRA;
+                // Check if the move destination is the promotion row
+                if (logicRow == promotionRow) {
+                    // It's a promotion move! Ask user.
+                    promotionChar = askForPromotion();
+                    if (promotionChar == ' ') {
+                        // User cancelled
+                        selectedLogicCol = null;
+                        selectedLogicRow = null;
+                        renderBoard();
+                        return;
+                    }
+                }
+            }
+
             // The 'moverPeca' method in Tabuleiro handles validation (is the move legal?).
-            Tabuleiro.moverPeca(selectedLogicCol, selectedLogicRow, logicCol, logicRow, 'q');
+            Tabuleiro.moverPeca(selectedLogicCol, selectedLogicRow, logicCol, logicRow, promotionChar);
 
             // CRITICAL: After any move attempt, we must refresh the game state.
             // This recalculates legal moves, checks for check/checkmate, etc.
@@ -330,6 +352,31 @@ public class ChessGUI extends Application {
             selectedLogicRow = null;
             renderBoard();
         }
+    }
+    
+    private char askForPromotion() {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("Queen", "Queen", "Rook", "Bishop", "Knight");
+        dialog.setTitle("Pawn Promotion");
+        dialog.setHeaderText("Select a piece for promotion:");
+        dialog.setContentText("Piece:");
+        
+        // Apply CSS to the dialog
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("chess-gui.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String choice = result.get();
+            switch (choice) {
+                case "Rook": return 'r';
+                case "Bishop": return 'b';
+                case "Knight": return 'n';
+                case "Queen": 
+                default: return 'q';
+            }
+        }
+        return ' '; // Cancelled
     }
 
     /**
@@ -352,6 +399,15 @@ public class ChessGUI extends Application {
     }
 
     private void checkGameOver() {
+        // Debugging output to console
+        System.out.println("Checking Game Over...");
+        System.out.println("White King Checkmated: " + Tabuleiro.getReiBranco().isCheckmated());
+        System.out.println("Black King Checkmated: " + Tabuleiro.getReiPreto().isCheckmated());
+        System.out.println("White King Stalemate: " + Tabuleiro.getReiBranco().isStalemate());
+        System.out.println("Black King Stalemate: " + Tabuleiro.getReiPreto().isStalemate());
+        System.out.println("Black King In Check: " + Tabuleiro.getReiPreto().isInCheck());
+        System.out.println("Black Legal Moves Count: " + Tabuleiro.casasLegaisPecasPretas.size());
+
         if (Tabuleiro.getReiBranco().isCheckmated()) {
             gameEnded = true;
             showAlert("Game Over", "Black wins by Checkmate!");
@@ -369,6 +425,12 @@ public class ChessGUI extends Application {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        
+        // Apply CSS to the alert
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("chess-gui.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
+
         alert.showAndWait();
     }
 

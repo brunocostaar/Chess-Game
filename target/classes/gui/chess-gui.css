@@ -104,3 +104,61 @@
     -fx-padding: 10px;
     -fx-background-radius: 8px;
 }
+
+/* --- Dialog Styling --- */
+
+/* Style for the Dialog Pane (Alerts, ChoiceDialogs) */
+.dialog-pane {
+    -fx-background-color: #1e293b; /* Dark background matching the app theme */
+    -fx-border-color: #475569; /* Slate gray border */
+    -fx-border-width: 2px;
+}
+
+/* Style for the header area of the dialog */
+.dialog-pane > .header-panel {
+    -fx-background-color: #0f172a; /* Darker header background */
+    -fx-padding: 10px;
+}
+
+/* Style for the content area of the dialog */
+.dialog-pane > .content {
+    -fx-background-color: #1e293b;
+    -fx-padding: 20px;
+}
+
+/* Text color for labels inside the dialog */
+.dialog-pane .label {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 14px;
+}
+
+/* Style for buttons inside the dialog (OK, Cancel, etc.) */
+.dialog-pane .button {
+    -fx-background-color: #38bdf8;
+    -fx-text-fill: #0f172a;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #7dd3fc;
+}
+
+/* Style for the ChoiceBox/ComboBox in the promotion dialog */
+.choice-box {
+    -fx-background-color: #334155;
+    -fx-text-fill: white;
+    -fx-mark-color: white; /* The arrow color */
+}
+
+.choice-box .label {
+    -fx-text-fill: white;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: #334155;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: #475569;
+}
