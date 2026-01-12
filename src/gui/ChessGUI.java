@@ -19,13 +19,7 @@ import pecas.*;
 import java.util.ArrayList;
 import java.util.Optional;
 
-/**
- * ChessGUI.java
- * -------------
- * This is the main JavaFX Application class that renders the Chess Game.
- * It acts as the "View" and "Controller" in a loose MVC pattern, interacting with the
- * "Model" (Tabuleiro and Peca classes) to display the game state and handle user input.
- */
+import static Tabuleiro.Tabuleiro.FEN_POS_INICIAL;
 public class ChessGUI extends Application {
 
     // Constants for visual layout
@@ -51,16 +45,12 @@ public class ChessGUI extends Application {
     private boolean showConfig = false; // Toggle for showing/hiding config panel
     private boolean gameEnded = false; // Flag to stop interaction when game ends
 
-    /**
-     * The main entry point for the JavaFX application.
-     * Sets up the window (Stage), the main layout (Scene), and initializes the game.
-     */
     @Override
     public void start(Stage primaryStage) {
         // 1. Initialize the Game Logic (Model)
         Tabuleiro.criarCasas(); // Create the internal 8x8 array of 'Casa' objects
         Tabuleiro.preencherCasasToString(); // Helper for algebraic notation (e.g., "a1")
-        Tabuleiro.lerFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"); // Load standard starting position
+        Tabuleiro.lerFEN(FEN_POS_INICIAL); // Load standard starting position
         refreshGameState(); // Calculate initial legal moves for all pieces
 
         // 2. Setup the Main Layout (BorderPane)

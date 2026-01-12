@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Tabuleiro {
-
+    //region constants
     public static final int COLUNAS = 8;
     public static final int FILEIRAS = 8;
 
@@ -30,6 +30,23 @@ public class Tabuleiro {
     public static final int SEXTA_FILEIRA = 5;
     public static final int SETIMA_FILEIRA = 6;
     public static final int OITAVA_FILEIRA = 7;
+    //endregion
+
+    private static Casa[][] casas = new Casa[COLUNAS][FILEIRAS];
+    private static ArrayList<Peca> pecasNoTabuleiro = new ArrayList<>(32);
+
+    private static Rei reiBranco;
+    private static Rei reiPreto;
+
+    public static ArrayList<Casa> casasLegaisPecasBrancas = new ArrayList<>(64);
+    public static ArrayList<Casa> casasLegaisPecasPretas = new ArrayList<>(64);
+
+    public static ArrayList<Casa> casasDeBloqueioBrancas = new ArrayList<>(32);
+    public static ArrayList<Casa> casasDeBloqueioPretas = new ArrayList<>(32);
+
+    public static final String FEN_POS_INICIAL = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
+    private static int jogadas = 0;
 
     public static final ArrayList<String> casasToString = new ArrayList<>(128);
 
@@ -135,21 +152,7 @@ public class Tabuleiro {
         return coluna;
     }
 
-    private static Casa[][] casas = new Casa[COLUNAS][FILEIRAS];
-    private static ArrayList<Peca> pecasNoTabuleiro = new ArrayList<>(32);
 
-    private static Rei reiBranco;
-    private static Rei reiPreto;
-
-    public static ArrayList<Casa> casasLegaisPecasBrancas = new ArrayList<>(64);
-    public static ArrayList<Casa> casasLegaisPecasPretas = new ArrayList<>(64);
-
-    public static ArrayList<Casa> casasDeBloqueioBrancas = new ArrayList<>(32);
-    public static ArrayList<Casa> casasDeBloqueioPretas = new ArrayList<>(32);
-
-    public static final String FEN_POS_INICIAL = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-
-    private static int jogadas = 0;
 
     public static Casa getCasa(int coluna, int fileira) {
         return casas[coluna][fileira];
